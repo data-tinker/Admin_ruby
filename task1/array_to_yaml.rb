@@ -26,5 +26,4 @@ servers = [
     :storage => [{:type => :sas, :size => 600}, {:type => :sas, :size => 600}, {:type => :ssd, :size => 400}, {:type => :ssd, :size => 400}]
   }
 ]
-
-puts servers.to_yaml
+File.open('./servers.yml', 'w') {|file| file.write(servers.to_yaml)}
