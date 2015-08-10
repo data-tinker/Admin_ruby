@@ -26,7 +26,6 @@ def find_ids_with_ram_over_100(servers)
   servers.each do |server|
     ram_sum = 0
     server[:ram].each do |server_ram|
-      #print server_ram
       ram_sum += server_ram
     end
     if ram_sum > 100
