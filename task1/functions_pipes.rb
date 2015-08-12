@@ -5,7 +5,7 @@ servers = YAML::load(File.open('servers.yml'))
 
 
 def find_ssd_only_ids(servers)
-  servers.select{|server| server[:storage].select{|server_storage| server_storage[:type] != :ssd}.empty?}.map{|server| server[:id]}
+  servers.select{|server| server[:storage].select{|storage| storage[:type] != :ssd}.empty?}.map{|server| server[:id]}
 end
 
 
@@ -25,4 +25,4 @@ def sorted_ids_by_cpu_frequency(servers)
   servers.sort_by {|server| server[:cpu][0][:frequency]}.map{|server| server[:id]}
 end
 
-print "#{find_ssd_only_ids(servers)}\n"
+#print "#{find_ssd_only_ids(servers)}\n"
