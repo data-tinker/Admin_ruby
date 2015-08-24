@@ -201,3 +201,13 @@ test
 #    assert_raises_with_message(InvalidConfiguration, message, &block)
 #  end
 #2) How to rewrite append method
+#
+#3) How to get rid of Initialization in class
+#class R530 < Server
+#  def initialize
+#    @memory = []
+#    @cpu = []
+#    memory_slots 16, :ddr4
+#    cpu_sockets 2, :haswell
+#  end
+#end
