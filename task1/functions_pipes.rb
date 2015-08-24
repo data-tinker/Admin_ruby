@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+require 'pry'
 servers = YAML::load(File.open('servers.yml'))
 
 
@@ -25,4 +26,4 @@ def sorted_ids_by_cpu_frequency(servers)
   servers.sort_by {|server| server[:cpu][0][:frequency]}.map{|server| server[:id]}
 end
 
-#print "#{find_ssd_only_ids(servers)}\n"
+print "#{find_ssd_only_ids(servers)}\n"
