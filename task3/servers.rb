@@ -10,7 +10,7 @@ class CPU
   end
 
   def == (other)
-    mhz == other.mhz && cores == other.cores && num2 == other.num2
+    mhz == other.mhz && cores == other.cores && type == other.type
   end
 
   def != (other)
@@ -46,48 +46,57 @@ class Server
   def initialize
     @memory = []
     @cpu = []
-    @memory_conf = {}
-    @cpu_conf = {}
+    @memory_conf = []
+    @cpu_conf = []
   end
-
-#  def self.initialize
-#    @memory_conf = {"asd" => "asd"}
-#    @cpu_conf = {}
-#  end
-
-#  def self.memory_slots(num, type)
-#    self.class::memory_conf = {num => type}
-#  end
 
   def memory_slots(num, type)
-    @memory_conf = {num => type}
+    @memory_conf = [num, type]
   end
-
-#  def self.cpu_sockets(num, type)
-#    @cpu_conf = {num => type}
-#  end
 
   def cpu_sockets(num, type)
-    @cpu_conf = {num => type}
+    @cpu_conf = [num, type]
   end
 
+#  def << (other)
+#    if other.class.superclass.name == CPU
+#      add_cpu(other)
+#    else
+#      add_memory(other)
+#    end
+#  end
+
   def add_memory(other)
-    if memory.size + 1 > 16
-      raise "too much memory"
-    else
-      memory.push(other)
+    memory.push(other)
+  end
+
+  def check_cpu(other)
+    if cpu.size  > cpu_conf[0]
+      raise "No more sockets left"
+    elsif other.type == :ivybridge
+      raise "Unsupported CPU type"
+    elsif cpu.size == 0
+      cpu.push(other)
+    elsif other != cpu[0]
+      raise "All CPUs should by identical"
     end
   end
 
   def add_cpu(other)
-    if cpu.empty?
+    if check_cpu(other)
       cpu.push(other)
-    elsif other != cpu[0]
-      raise "different cpus"
-    elsif cpu.size + 1 > 2
-      raise "too much cpus"
+    end
+  end
+
+  def << other
+    if other.class.superclass.name == "CPU"
+      add_cpu(other)
+    elsif other.class.superclass.name == "Memory"
+      add_memory(other)
+    elsif other.class.name == "CPU"
+      add_cpu(other)
     else
-      cpu.push(other)
+      add_memory(other)
     end
   end
 
@@ -118,15 +127,23 @@ class Server
 end
 
 class R530 < Server
-  memory_slots 16, :ddr4
-  cpu_sockets 2, :haswell
+  def initialize
+    @memory = []
+    @cpu = []
+    memory_slots 16, :ddr4
+    cpu_sockets 2, :haswell
+  end
 end
-#
-#class R920 < Server
-#  memory_slots 32, :ddr3
-#  cpu_sockets 4, :ivybridge
-#end
-#
+
+class R920 < Server
+  def initialize
+    @memory = []
+    @cpu = []
+    memory_slots 32, :ddr3
+    cpu_sockets 4, :ivybridge
+  end
+end
+
 class E5_4650 < CPU
   def initialize
     super 2100, 12, :haswell
@@ -159,7 +176,8 @@ end
 
 def test
   server = R530.new
-  puts server.memory_conf
+  server << E5_4650.new
+  server << E5_4660.new
 end
 
 test
