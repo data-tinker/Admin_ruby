@@ -58,27 +58,33 @@ class Server
     @cpu_conf = [num, type]
   end
 
-#  def << (other)
-#    if other.class.superclass.name == CPU
-#      add_cpu(other)
-#    else
-#      add_memory(other)
-#    end
-#  end
+  def check_memory(other)
+    if memory.size + 1 > memory_conf[0]
+      raise "No more memory slots left"
+    elsif other.type == :ddr4
+      raise "Unsupported memory type"
+    else
+      true
+    end
+  end
 
   def add_memory(other)
-    memory.push(other)
+    if check_memory(other)
+      memory.push(other)
+    end
   end
 
   def check_cpu(other)
-    if cpu.size  > cpu_conf[0]
+    if cpu.size + 1 > cpu_conf[0]
       raise "No more sockets left"
     elsif other.type == :ivybridge
       raise "Unsupported CPU type"
-    elsif cpu.size == 0
-      cpu.push(other)
     elsif other != cpu[0]
       raise "All CPUs should by identical"
+    elsif cpu.size == 0
+      cpu.push(other)
+    else
+      true
     end
   end
 
@@ -175,9 +181,23 @@ class DDR4_16 < Memory
 end
 
 def test
-  server = R530.new
-  server << E5_4650.new
-  server << E5_4660.new
+    server = R920.new
+    32.times { server << DDR3_16.new }
+
+    puts server.memory_size
 end
 
 test
+
+
+#to ask:
+#1)
+#  def assert_raises_with_message(clazz, message, &block)
+#    err = assert_raises(clazz, &block)
+#    assert_equal message, err.message
+#  end
+#
+#  def assert_invalid_configuration(message, &block)
+#    assert_raises_with_message(InvalidConfiguration, message, &block)
+#  end
+#2) How to rewrite append method
