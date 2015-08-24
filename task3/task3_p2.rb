@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'minitest/autorun'
-require './server'
+require './servers'
 
 class R530 < Server
   memory_slots 16, :ddr4
