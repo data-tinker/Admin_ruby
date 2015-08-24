@@ -191,7 +191,7 @@ test
 
 
 #to ask:
-#1)
+#1) Why do we need this?
 #  def assert_raises_with_message(clazz, message, &block)
 #    err = assert_raises(clazz, &block)
 #    assert_equal message, err.message
