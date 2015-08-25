@@ -202,13 +202,15 @@ test
 #  end
 #
 #2) How to rewrite append (<<) method
+#class Cont
+#  def << (atr)
+#    @items << atr
+#  end
+#end
 #
 #3) How to get rid of Initialization in class
-#class R530 < Server
-#  def initialize
-#    @memory = []
-#    @cpu = []
-#    memory_slots 16, :ddr4
-#    cpu_sockets 2, :haswell
+#def self.memory_slots (type, count)
+#  define (:memory) do 
+#    memory ||= MemCont(type, count)
 #  end
 #end
